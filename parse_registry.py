@@ -6,7 +6,7 @@ import pandas as pd
 from csv import writer
 
 OUTPUT_FILE = "companies_founders.csv"
-
+XML_FILE = '15.1-EX_XML_EDR_UO.xml'
 
 fields = ['NAME', 'SHORT_NAME', 'EDRPOU', 'ADDRESS', 'BOSS', 'KVED', 'STAN', "FOUNDER"]
 
@@ -21,8 +21,6 @@ def dump_company():
         if c != 'FOUNDER':
             df[c] = company[c][0]
     df.to_csv(OUTPUT_FILE, mode = 'a', header = False, index = False)
-        
-  
 
 def start_element(name, attrs):
     global company, content, isData
@@ -47,12 +45,11 @@ def end_element(name):
         company[name].append(content)
     content = ''
 
-
 def char_data(data):
     global content
-    #print(isData, data)
     if isData:
         content += data
+
 
 if __name__ == "__main__":
     p = expat.ParserCreate()
@@ -65,6 +62,6 @@ if __name__ == "__main__":
     p.StartElementHandler = start_element
     p.EndElementHandler = end_element
     p.CharacterDataHandler = char_data
-    with codecs.open("/home/pavlo/texty.org.ua/registry/15.1-EX_XML_EDR_UO.xml", 'r', 'cp1251') as f:
+    with codecs.open(XML_FILE, 'r', 'cp1251') as f:
         file_content = f.read()
         p.Parse(file_content)
