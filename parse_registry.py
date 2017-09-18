@@ -20,6 +20,7 @@ def dump_company():
     for c in company:
         if c != 'FOUNDER':
             df[c] = company[c][0]
+    df = df[fields]
     df.to_csv(OUTPUT_FILE, mode = 'a', header = False, index = False)
 
 def start_element(name, attrs):
@@ -41,7 +42,6 @@ def end_element(name):
         dump_company()
         company2nulls()
     elif name in fields:
-        #print(content)
         company[name].append(content)
     content = ''
 
